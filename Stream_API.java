@@ -23,15 +23,13 @@ public class Stream_API {
         employeeList.add(emp1);
         employeeList.add(emp2);
 
-        Map<String,Integer> filteredEmployees = employeeList.stream()
+        Map<String, Double> filteredList =  employeeList.stream()
                 .filter(emp -> emp.getAge() >= 30 && emp.getAge() <= 50 && emp.getSalary() > 60_000)
                 .flatMap(emp -> emp.getProjects().stream())
                 .filter(proj -> proj.getDuration() > 6)
-                .peek(proj -> proj.setName(proj.getName().toUpperCase()))
-                .distinct()
                 .sorted(Comparator.comparingInt(Project::getDuration).reversed())
-                .collect(Collectors.toMap(Project::getName, Project::getDuration));
-        System.out.println(filteredEmployees);
+                .collect(Collectors.groupingBy(proj -> proj.getName().toUpperCase(), Collectors.averagingInt(Project::getDuration)));
+        System.out.println(filteredList);
     }
 
 }
